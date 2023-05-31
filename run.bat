@@ -1,0 +1,1 @@
+docker run -d --name lesson-registration-front --network lesson-registration --ip 172.20.0.2 -p 8000:80 lesson-registration-front

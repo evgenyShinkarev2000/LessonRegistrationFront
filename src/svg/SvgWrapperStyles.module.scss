@@ -1,0 +1,10 @@
+.svgWrapper{
+  width: 24px;
+  height: 24px;
+  &.currentFill{
+    fill: currentColor;
+  }
+  &.currentStroke{
+    stroke: currentColor;
+  }
+}

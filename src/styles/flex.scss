@@ -1,0 +1,11 @@
+:global {
+  .just-content-between{
+    justify-content: space-between;
+  }
+  .just-content-start{
+    justify-content: flex-start;
+  }
+  .just-content-end{
+    justify-content: flex-end;
+  }
+}

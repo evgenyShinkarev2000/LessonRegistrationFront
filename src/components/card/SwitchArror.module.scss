@@ -1,0 +1,16 @@
+.container{
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  border: 1px solid lightgray;
+  .arrow{
+    width: 20px;
+    height: 20px;
+  }
+  .extended{
+    transform: rotate(180deg);
+  }
+}

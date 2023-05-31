@@ -1,0 +1,19 @@
+@import "./colors.scss";
+
+:global {
+  .card-input {
+    border: 1px solid transparent;
+
+    &:read-write {
+      border: 1px solid $grey-4;
+
+      &:focus {
+        border: 1px solid $basic-blue;
+      }
+    }
+
+    &:focus-visible {
+      outline: none;
+    }
+  }
+}

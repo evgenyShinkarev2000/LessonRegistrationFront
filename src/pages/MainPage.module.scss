@@ -1,0 +1,11 @@
+.navBar{
+  padding-block: 5px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid lightgray;
+  .links{
+    display: flex;
+    justify-content: flex-start;
+    justify-self: flex-start;
+    gap: 10px;
+  }
+}
