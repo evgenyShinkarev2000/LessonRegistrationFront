@@ -66,7 +66,7 @@ export class TokenManager
 
     const expired = (jwtDecode(this._token.accessToken) as any).exp * 1000;
     const delay = expired - Date.now() - 5 * 1000;
-    this._updateTokenTimeoutId = setTimeout(() =>
+    this._updateTokenTimeoutId = window.setTimeout(() =>
     {
       this.updateToken();
     }, delay);
