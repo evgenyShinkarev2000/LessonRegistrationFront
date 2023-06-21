@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./CardFull.module.scss";
 import { SwitchArrow } from "./SwitchArrow";
-import { EditButtonGroup } from "./EditButtonGroup";
+import { ButtonGroup } from "./ButtonGroup";
 
 export type FieldGroup = {
   title: React.ReactElement,
@@ -14,6 +14,7 @@ export type CardFullProps = {
   extendedFields?: React.ReactElement[],
   fieldGroups?: React.ReactElement[],
   isExtendedInitial?: boolean,
+  canChangeExtended?: boolean,
 }
 
 export const CardFull: React.FC<CardFullProps> = (props) =>
@@ -22,9 +23,13 @@ export const CardFull: React.FC<CardFullProps> = (props) =>
 
   return (
     <div className={styles.cardFull}>
-      <div className={styles.extenedArrow}>
-        <SwitchArrow onClick={() => setIsExtended(prev => !prev)} isExtended={isExtended} />
-      </div>
+      {
+        props.canChangeExtended &&
+        <div className={styles.extenedArrow}>
+          <SwitchArrow onClick={() => setIsExtended(prev => !prev)} isExtended={isExtended} />
+        </div>
+      }
+
       <div className={styles.title}>
         {
           props.title

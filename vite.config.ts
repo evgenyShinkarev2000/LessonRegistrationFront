@@ -24,6 +24,7 @@ export default defineConfig((params) =>
               @import "./src/styles/card.scss";
               @import "./src/styles/flex.scss";
               @import "./src/styles/colors.scss";
+              @import "./src/styles/svg.scss";
       `,
       },
     }

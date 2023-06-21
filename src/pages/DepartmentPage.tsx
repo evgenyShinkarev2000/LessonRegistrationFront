@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import { DepartmentCard } from "src/components/DepartmentCard";
-import { Department } from "src/data/Department";
+import { DepartmentCardContainer } from "src/components/DepartmentCardContainer";
+import { InstituteCard } from "src/components/InstituteCard";
 import { apiContainer } from "src/store/api";
 
 export const DepartmentPage: React.FC = () =>
 {
   const departments = apiContainer.useGetDepartmentsQuery().data;
   const institutes = apiContainer.useGetInstitutesQuery().data;
+  const [isAddShow, setIsAddShow] = useState(false);
 
   return (
     <div className="container">
@@ -14,9 +16,27 @@ export const DepartmentPage: React.FC = () =>
       <br></br>
       <div className="card-block">
         {
-          departments?.map((d, i) => <DepartmentCard department={d} availableInstitutes={institutes ?? []} key={i} />)
+          departments?.map((d, i) => <DepartmentCardContainer
+            value={d}
+            modeInitial="watch"
+            availableInstitutes={institutes ?? []}
+            key={i}
+            render={(props) => <DepartmentCard {...props}/>}
+          />)
         }
       </div>
+      <br></br>
+      <button onClick={() => setIsAddShow(true)}>Добавить</button>
+      {
+        isAddShow && <DepartmentCardContainer 
+        //@ts-ignore
+        value={{institute: {name: "Не выбран"}, name:"Новый институт"}} 
+        render={props => <DepartmentCard {...props}/>}
+        availableInstitutes={institutes ?? []}
+        modeInitial="create"
+        onCreateClose={() => setIsAddShow(false)}
+        />
+      }
     </div>
   )
 }
