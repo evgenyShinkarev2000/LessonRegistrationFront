@@ -32,7 +32,6 @@ export const DepartmentCardContainer: React.FC<PropsWithChildren<DepartmentConta
     removeDepartment(props.value.id).then(() =>
     {
       setIsUpdating(false);
-      setMode("watch");
     });
   }
 
@@ -69,7 +68,7 @@ export const DepartmentCardContainer: React.FC<PropsWithChildren<DepartmentConta
     mode,
     value: props.value,
     isUpdating,
-    onCancelAdd: props.onCreateClose,
+    onCancelCreate: props.onCreateClose,
     onCreate: create,
     onUpdate: update,
     onRemove: remove,

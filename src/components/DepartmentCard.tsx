@@ -13,6 +13,7 @@ import { ButtonGroup } from "./card/ButtonGroup";
 import { CardFull } from "./card/CardFull";
 import { CardMode } from "./card/CardMode";
 import { CardTextField } from "./card/CardTextField";
+import { CardButtons } from "./card/CardButtons";
 
 export type DepartmentCardProps = {
   value: Department,
@@ -20,7 +21,7 @@ export type DepartmentCardProps = {
   mode: CardMode,
   isUpdating?: boolean,
   onCreate?: (value: Department) => void,
-  onCancelAdd?: () => void,
+  onCancelCreate?: () => void,
   onRemove?: () => void,
   onUpdate?: (value: Department) => void,
   onSwitchRemove?: () => void,
@@ -31,6 +32,7 @@ export type DepartmentCardProps = {
 export const DepartmentCard: React.FC<DepartmentCardProps> = (props) =>
 {
   const { register, getValues, reset, control } = useForm({ defaultValues: props.value });
+  const isReadonly = props.mode === "watch" || props.mode === "remove";
 
   const switchRemove = useCallback(() =>
   {
@@ -70,12 +72,15 @@ export const DepartmentCard: React.FC<DepartmentCardProps> = (props) =>
     props.onRemove?.();
   }, [props.onRemove]);
 
+  const cancelRemove = useCallback(() =>
+  {
+    props.onSwitchWatch?.();
+  }, [props.onSwitchWatch]);
+
   const cancelCreate = useCallback(() =>
   {
-    props.onCancelAdd?.();
-  }, [props.onCancelAdd]);
-
-  const isReadonly = props.mode === "watch" || props.mode === "remove";
+    props.onCancelCreate?.();
+  }, [props.onCancelCreate]);
 
   const managedSelect = <Controller
     name={nameof<Department>("institute")}
@@ -97,61 +102,18 @@ export const DepartmentCard: React.FC<DepartmentCardProps> = (props) =>
       />}
   />
 
-  const selectControlButtons = () =>
-  {
-    switch (props.mode)
-    {
-      case "create":
-        return <ButtonGroup
-          isUpdating={props.isUpdating}
-          render={() => [
-            <svg className="svg-default" onClick={create} key={1}>
-              <CreateBtnPath />
-            </svg>,
-            <svg className="svg-default" onClick={cancelCreate} key={2}>
-              <CancelBtnPath />
-            </svg>
-          ]} />
-      case "edit":
-        return <ButtonGroup
-          isUpdating={props.isUpdating}
-          render={() => [
-            <svg className="svg-default" onClick={update} key={1}>
-              <AcceptBtnPath />
-            </svg>,
-            <svg className="svg-default" onClick={cancelUpdate} key={2}>
-              <CancelBtnPath />
-            </svg>
-          ]}
-        />
-      case "watch":
-        return <ButtonGroup
-          isUpdating={props.isUpdating}
-          render={() => [
-            <svg className="svg-default" onClick={switchUpdate} key={1}>
-              <EditBtnPath />
-            </svg>,
-            <svg className="svg-default" onClick={switchRemove} key={2}>
-              <RemoveBtnPath />
-            </svg>
-          ]}
-        />
-      case "remove":
-        return <ButtonGroup
-          isUpdating={props.isUpdating}
-          render={() => [
-            <svg className="svg-default" onClick={remove} key={1}>
-              <AcceptBtnPath />
-            </svg>,
-            <svg className="svg-default" onClick={switchWatch} key={2}>
-              <CancelBtnPath />
-            </svg>
-          ]}
-        />
-    }
-  }
-
-  const controlButtons = useMemo(() => selectControlButtons(), [props.mode]);
+  const controlButtons = useMemo(() =>
+    <CardButtons
+      mode={props.mode}
+      acceptCreate={{ onClick: create }}
+      cancelCreate={{ onClick: cancelCreate }}
+      acceptUpdate={{ onClick: update }}
+      cancelUpdate={{ onClick: cancelUpdate }}
+      acceptRemove={{ onClick: remove }}
+      cancelRemove={{ onClick: cancelRemove }}
+      switchUpdate={{ onClick: switchUpdate }}
+      switchRemove={{ onClick: switchRemove }}
+    />, [props.mode]);
 
   return (
     <CardFull

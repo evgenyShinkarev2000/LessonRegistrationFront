@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 import { DepartmentCard } from "src/components/DepartmentCard";
 import { DepartmentCardContainer } from "src/components/DepartmentCardContainer";
 import { InstituteCard } from "src/components/InstituteCard";
@@ -20,7 +21,7 @@ export const DepartmentPage: React.FC = () =>
             value={d}
             modeInitial="watch"
             availableInstitutes={institutes ?? []}
-            key={i}
+            key={d.id}
             render={(props) => <DepartmentCard {...props}/>}
           />)
         }
@@ -30,7 +31,7 @@ export const DepartmentPage: React.FC = () =>
       {
         isAddShow && <DepartmentCardContainer 
         //@ts-ignore
-        value={{institute: {name: "Не выбран"}, name:"Новый институт"}} 
+        value={{institute: {name: "Не выбран"}, name:"Новый департамент"}} 
         render={props => <DepartmentCard {...props}/>}
         availableInstitutes={institutes ?? []}
         modeInitial="create"

@@ -13,10 +13,8 @@ const transformDto = function (this: any, key: string, value: any): any
   this[lower] = value;
 }
 
-const transformResponse = function (value: string): any
-{
-  return JSON.parse(value, transformDto);
-}
+const responseHandler = (r: Response) => r.text();
+const transformResponse = (value: string) => JSON.parse(value, transformDto);
 
 export const api = createApi(
   {
@@ -29,7 +27,7 @@ export const api = createApi(
           {
             query: () => ({
               url: "Institute",
-              responseHandler: (r: Response) => r.text()
+              responseHandler,
             }),
             transformResponse,
             providesTags: ["Institutes"],
@@ -39,7 +37,7 @@ export const api = createApi(
           {
             query: () => ({
               url: "Department",
-              responseHandler: (r: Response) => r.text()
+              responseHandler,
             }),
             transformResponse,
             providesTags: ["Departments"],
@@ -49,7 +47,7 @@ export const api = createApi(
           query: (id: number) => ({
             url: `Department/${id}`,
             method: "Delete",
-            responseHandler: (r: Response) => r.text(),
+            responseHandler,
           }),
           transformResponse,
           invalidatesTags: ["Departments", "Institutes"],
@@ -59,7 +57,7 @@ export const api = createApi(
             url: "Department",
             method: "Post",
             body: department,
-            responseHandler: (r: Response) => r.text(),
+            responseHandler,
           }),
           transformResponse,
           invalidatesTags: ["Departments", "Institutes"],
@@ -67,9 +65,28 @@ export const api = createApi(
         updateInstitute: builder.mutation<Institute, Institute>({
           query: (institute: Institute) => ({
             url: "Institute",
-            responseHandler: (r: Response) => r.text(),
+            responseHandler,
             body: institute,
             method: "PUT"
+          }),
+          transformResponse,
+          invalidatesTags: ["Institutes"],
+        }),
+        addInstitute: builder.mutation<Institute, Institute>({
+          query: (institute: Institute) => ({
+            url: "Institute",
+            responseHandler,
+            body: institute,
+            method: "Post",
+          }),
+          transformResponse,
+          invalidatesTags: ["Institutes"],
+        }),
+        removeInstitute: builder.mutation<Institute, number>({
+          query: (id: number) => ({
+            url: `Institute/${id}`,
+            responseHandler,
+            method: "Delete",
           }),
           transformResponse,
           invalidatesTags: ["Institutes"],
@@ -77,7 +94,7 @@ export const api = createApi(
         updateDepartment: builder.mutation<Department, Department>({
           query: (department: Department) => ({
             url: "Department",
-            responseHandler: (r: Response) => r.text(),
+            responseHandler,
             body: department,
             method: "PUT"
           }),
@@ -96,6 +113,8 @@ const { useGetInstitutesQuery,
   useUpdateDepartmentMutation,
   useAddDepartmentMutation,
   useRemoveDepartmentMutation,
+  useAddInstituteMutation,
+  useRemoveInstituteMutation,
 } = api;
 
 export const apiContainer = {
@@ -105,4 +124,6 @@ export const apiContainer = {
   useUpdateDepartmentMutation,
   useAddDepartmentMutation,
   useRemoveDepartmentMutation,
-}
+  useAddInstituteMutation,
+  useRemoveInstituteMutation,
+};
