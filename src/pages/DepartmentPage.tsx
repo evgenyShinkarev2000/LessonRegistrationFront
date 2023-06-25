@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import finalPropsSelectorFactory from "react-redux/es/connect/selectorFactory";
 import { DepartmentCard } from "src/components/DepartmentCard";
 import { DepartmentCardContainer } from "src/components/DepartmentCardContainer";
-import { InstituteCard } from "src/components/InstituteCard";
 import { apiContainer } from "src/store/api";
 
 export const DepartmentPage: React.FC = () =>
@@ -20,9 +18,8 @@ export const DepartmentPage: React.FC = () =>
           departments?.map((d, i) => <DepartmentCardContainer
             value={d}
             modeInitial="watch"
-            availableInstitutes={institutes ?? []}
             key={d.id}
-            render={(props) => <DepartmentCard {...props}/>}
+            render={(props) => <DepartmentCard {...{...props, availableInstitutes: institutes ?? []}}/>}
           />)
         }
       </div>
@@ -32,7 +29,7 @@ export const DepartmentPage: React.FC = () =>
         isAddShow && <DepartmentCardContainer 
         //@ts-ignore
         value={{institute: {name: "Не выбран"}, name:"Новый департамент"}} 
-        render={props => <DepartmentCard {...props}/>}
+        render={props => <DepartmentCard {...{...props, availableInstitutes: institutes ?? []}}/>}
         availableInstitutes={institutes ?? []}
         modeInitial="create"
         onCreateClose={() => setIsAddShow(false)}

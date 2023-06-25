@@ -1,81 +1,28 @@
-import React, { PropsWithChildren, useCallback, useMemo, useState } from "react";
-import { CardMode } from "./card/CardMode";
-import { apiContainer } from "src/store/api";
-import { DepartmentCard, DepartmentCardProps } from "./DepartmentCard";
-import { Institute } from "src/data/Institute";
+import React from "react";
 import { Department } from "src/data/Department";
-import { watch } from "fs";
+import { useApi } from "src/services/Api/useApi";
+import { CardMode } from "./card/CardMode";
+import { CrudCardBehaviourContainer, CrudCardContainerProps, CrudCardPresentorPartialProps } from "./card/CrudCardBehaviourContainer";
 
 type DepartmentContainerProps = {
-  modeInitial: CardMode,
-  availableInstitutes: Institute[],
   value: Department,
-  onCreateClose?: () => void,
-  render: (departmentCardProps: DepartmentCardProps) => React.ReactElement,
+  modeInitial: CardMode,
+  render: (props: CrudCardPresentorPartialProps<Department>) => React.ReactElement<CrudCardPresentorPartialProps<Department>>,
 }
 
-export const DepartmentCardContainer: React.FC<PropsWithChildren<DepartmentContainerProps>> = (props) =>
+export const DepartmentCardContainer: React.FC<DepartmentContainerProps> = (props) =>
 {
-  const [addDepartment, addDepartmentResponse] = apiContainer.useAddDepartmentMutation();
-  const [updateDepartment, updateDepartmentResponse] = apiContainer.useUpdateDepartmentMutation();
-  const [removeDepartment, removeDepartmentResponse] = apiContainer.useRemoveDepartmentMutation();
-  const [mode, setMode] = useState(props.modeInitial);
-  const [isUpdating, setIsUpdating] = useState(false);
+  const api = useApi();
+  const [create, createResponse] = api.useAddDepartmentMutation();
+  const [update, updateResponse] = api.useUpdateDepartmentMutation();
+  const [remove, removeResponse] = api.useRemoveDepartmentMutation();
 
-  const remove = () =>
-  {
-    if (isUpdating)
-    {
-      return;
-    }
-    setIsUpdating(true);
-    removeDepartment(props.value.id).then(() =>
-    {
-      setIsUpdating(false);
-    });
-  }
-
-  const update = (department: Department) =>
-  {
-    if (isUpdating)
-    {
-      return;
-    }
-    setIsUpdating(true);
-    updateDepartment(department).then(() =>
-    {
-      setIsUpdating(false);
-      setMode("watch");
-    });
-  }
-
-  const create = (department: Department) =>
-  {
-    if (isUpdating)
-    {
-      return;
-    }
-    setIsUpdating(true);
-    addDepartment(department).then(() =>
-    {
-      setIsUpdating(false);
-      props.onCreateClose?.();
-    });
-  }
-
-  const childrenProps: DepartmentCardProps = {
-    availableInstitutes: props.availableInstitutes,
-    mode,
-    value: props.value,
-    isUpdating,
-    onCancelCreate: props.onCreateClose,
+  const childrenProps: CrudCardContainerProps<Department> = {
+    ...props,
     onCreate: create,
     onUpdate: update,
-    onRemove: remove,
-    onSwitchRemove: () => setMode("remove"),
-    onSwitchUpdate: () => setMode("edit"),
-    onSwitchWatch: () => setMode("watch"),
-  };
+    onRemove: () => remove(props.value.id),
+  }
 
-  return props.render(childrenProps);
+  return <CrudCardBehaviourContainer {...childrenProps}/>
 }
